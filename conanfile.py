@@ -71,6 +71,7 @@ class GetTextConan(ConanFile):
                 "--with-libxml2-prefix=%s" % libxml2_prefix]
         build = None
         host = None
+        rc = None
         if self.options.shared:
             args.extend(["--disable-static", "--enable-shared"])
         else:
@@ -83,14 +84,18 @@ class GetTextConan(ConanFile):
             build = False
             if self.settings.arch == "x86":
                 host = "i686-w64-mingw32"
+                rc = "windres --target=pe-i386"
             elif self.settings.arch == "x86_64":
                 host = "x86_64-w64-mingw32"
+                rc = "windres --target=pe-x86-64"
             args.extend(["CC=$PWD/../build-aux/compile cl -nologo",
                          "LD=link",
                          "NM=dumpbin -symbols",
                          "STRIP=:",
                          "AR=$PWD/../build-aux/ar-lib lib",
                          "RANLIB=:"])
+            if rc:
+                args.extend(['RC=%s' % rc, 'WINDRES=%s' % rc])
         with tools.vcvars(self.settings) if self._is_msvc else tools.no_op():
             with tools.environment_append(VisualStudioBuildEnvironment(self).vars) if self._is_msvc else tools.no_op():
                 # for installer use "gettext-runtime"
