@@ -101,6 +101,8 @@ class GetTextConan(ConanFile):
                 # for installer use "gettext-runtime"
                 with tools.chdir(os.path.join(self._source_subfolder, "gettext-tools")):
                     env_build = AutoToolsBuildEnvironment(self, win_bash=tools.os_info.is_windows)
+                    if self._is_msvc:
+                        env_build.flags.append("-FS")
                     env_build.configure(args=args, build=build, host=host)
                     env_build.make(args=["-C", "intl"])
 
