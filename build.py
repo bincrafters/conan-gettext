@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from bincrafters import build_template_default
+from bincrafters import build_template_default, build_template_installer, build_shared
 import os
 
 if __name__ == "__main__":
