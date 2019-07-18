@@ -14,7 +14,7 @@ stages:
 matrix:
    include:
       - stage: default
-      - <<: *linux
+        <<: *linux
         env: CONAN_GCC_VERSIONS=4.9 CONAN_DOCKER_IMAGE=conanio/gcc49
       - <<: *linux
         env: CONAN_GCC_VERSIONS=5 CONAN_DOCKER_IMAGE=conanio/gcc5
