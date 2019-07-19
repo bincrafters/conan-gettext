@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 from conanfile_base import ConanFileBase
 
@@ -10,12 +8,20 @@ class GetTextConan(ConanFileBase):
     exports = ConanFileBase.exports + ["conanfile_base.py"]
     settings = "os_build", "arch_build", "arch", "compiler", "build_type"
 
+    @property
+    def _gettext_folder(self):
+        return "gettext-runtime"
+
+    @property
+    def _make_args(self):
+        return None
+
     def package(self):
         super(GetTextConan, self).package()
         suffix = ".exe" if self.settings.os_build == "Windows" else ""
-        for executable in ["gettext", "xgettext", "ngettext"]:
+        for executable in ["gettext", "ngettext"]:
             executable += suffix
-            self.copy(pattern=executable, dst="bin", src=self._source_subfolder, keep_path=False)
+            self.copy(pattern=executable, dst="bin", src=os.path.join(self._source_subfolder, self._gettext_folder, "src"), keep_path=False)
 
     def package_id(self):
         self.info.include_build_settings()

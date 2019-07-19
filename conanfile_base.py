@@ -28,6 +28,14 @@ class ConanFileBase(ConanFile):
     def _is_msvc(self):
         return self.settings.compiler == "Visual Studio"
 
+    @property
+    def _gettext_folder(self):
+        return "gettext-tools"
+
+    @property
+    def _make_args(self):
+        return ["-C", "intl"]
+
     def configure(self):
         del self.settings.compiler.libcxx
 
@@ -93,13 +101,12 @@ class ConanFileBase(ConanFile):
                 args.extend(['RC=%s' % rc, 'WINDRES=%s' % rc])
         with tools.vcvars(self.settings) if self._is_msvc else tools.no_op():
             with tools.environment_append(VisualStudioBuildEnvironment(self).vars) if self._is_msvc else tools.no_op():
-                # for installer use "gettext-runtime"
-                with tools.chdir(os.path.join(self._source_subfolder, "gettext-tools")):
+                with tools.chdir(os.path.join(self._source_subfolder, self._gettext_folder)):
                     env_build = AutoToolsBuildEnvironment(self, win_bash=tools.os_info.is_windows)
                     if self._is_msvc:
                         env_build.flags.append("-FS")
                     env_build.configure(args=args, build=build, host=host)
-                    env_build.make(args=["-C", "intl"])
+                    env_build.make(self._make_args)
 
     def package(self):
         self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
