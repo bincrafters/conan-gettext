@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 from conanfile_base import ConanFileBase
 
@@ -32,8 +30,4 @@ class GetTextConan(ConanFileBase):
             self.cpp_info.libs = ["gnuintl.dll.lib"]
         else:
             self.cpp_info.libs = ["gnuintl"]
-        if self.settings.os == "Macos":
-            frameworks = ['CoreFoundation']
-            for framework in frameworks:
-                self.cpp_info.exelinkflags.append("-framework %s" % framework)
-            self.cpp_info.sharedlinkflags = self.cpp_info.exelinkflags
+        self.cpp_info.frameworks.extend(['CoreFoundation'])
