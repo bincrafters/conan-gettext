@@ -18,7 +18,7 @@ class ConanFileBase(ConanFile):
     exports = ["LICENSE.md"]
     exports_sources = ["patches/*.patch"]
     requires = ("libiconv/1.15",
-                "libxml2/2.9.9@bincrafters/stable")
+                "libxml2/2.9.9")
 
     @property
     def _source_subfolder(self):
