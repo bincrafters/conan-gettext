@@ -42,7 +42,7 @@ class ConanFileBase(ConanFile):
     def build_requirements(self):
         if tools.os_info.is_windows:
             if "CONAN_BASH_PATH" not in os.environ:
-                self.build_requires("cygwin_installer/2.9.0@bincrafters/stable")
+                self.build_requires("msys2/20190524")
         if self._is_msvc:
             self.build_requires("automake_build_aux/1.16.1@bincrafters/stable")
 
