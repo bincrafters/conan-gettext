@@ -30,4 +30,5 @@ class GetTextConan(ConanFileBase):
             self.cpp_info.libs = ["gnuintl.dll.lib"]
         else:
             self.cpp_info.libs = ["gnuintl"]
-        self.cpp_info.frameworks.extend(['CoreFoundation'])
+        if self.settings.os == "Macos":
+            self.cpp_info.frameworks.extend(['CoreFoundation'])
