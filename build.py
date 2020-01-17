@@ -9,8 +9,9 @@ if __name__ == "__main__":
     if "CONAN_CONANFILE" in os.environ and os.environ["CONAN_CONANFILE"] == "conanfile_installer.py":
         arch = os.environ["ARCH"]
         builder = build_template_installer.get_builder()
-        settings = {"os": build_shared.get_os(), "arch_build": arch, "arch": arch}
-
+        settings = {"os": build_shared.get_os(), "arch_build": arch, "arch": arch, "build_type": "Debug"}
+        builder.add(settings, {}, {}, {})
+        settings = {"os": build_shared.get_os(), "arch_build": arch, "arch": arch, "build_type": "Release"}
         builder.add(settings, {}, {}, {})
         builder.run()
     else:
