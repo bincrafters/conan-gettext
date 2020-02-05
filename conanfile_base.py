@@ -44,7 +44,7 @@ class ConanFileBase(ConanFile):
             if "CONAN_BASH_PATH" not in os.environ:
                 self.build_requires("msys2/20190524")
         if self._is_msvc:
-            self.build_requires("automake_build_aux/1.16.1@bincrafters/stable")
+            self.build_requires("automake/1.16.1")
 
     def source(self):
         source_url = "https://ftp.gnu.org/pub/gnu/gettext/gettext-%s.tar.gz" % self.version
@@ -81,9 +81,6 @@ class ConanFileBase(ConanFile):
             args.extend(["--disable-shared", "--enable-static"])
         if self._is_msvc:
             # INSTALL.windows: Native binaries, built using the MS Visual C/C++ tool chain.
-            for filename in ["compile", "ar-lib"]:
-                shutil.copy(os.path.join(self.deps_cpp_info["automake_build_aux"].rootpath, filename),
-                            os.path.join(self._source_subfolder, "build-aux", filename))
             build = False
             if self.settings.arch == "x86":
                 host = "i686-w64-mingw32"
@@ -91,11 +88,14 @@ class ConanFileBase(ConanFile):
             elif self.settings.arch == "x86_64":
                 host = "x86_64-w64-mingw32"
                 rc = "windres --target=pe-x86-64"
-            args.extend(["CC=$PWD/../build-aux/compile cl -nologo",
+            automake_perldir = os.getenv('AUTOMAKE_PERLLIBDIR')
+            if automake_perldir.startswith('/mnt/'):
+                automake_perldir = automake_perldir[4:]
+            args.extend(["CC=%s/compile cl -nologo" % automake_perldir,
                          "LD=link",
                          "NM=dumpbin -symbols",
                          "STRIP=:",
-                         "AR=$PWD/../build-aux/ar-lib lib",
+                         "AR=%s/ar-lib lib" % automake_perldir,
                          "RANLIB=:"])
             if rc:
                 args.extend(['RC=%s' % rc, 'WINDRES=%s' % rc])
