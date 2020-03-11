@@ -17,7 +17,7 @@ class ConanFileBase(ConanFile):
     license = "GPL-3.0-or-later"
     exports = ["LICENSE.md"]
     exports_sources = ["patches/*.patch"]
-    requires = ("libiconv/1.15",
+    requires = ("libiconv/1.16",
                 "libxml2/2.9.9")
 
     @property
